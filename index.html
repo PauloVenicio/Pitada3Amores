@@ -45,6 +45,7 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       overflow: hidden;
       transition: transform 0.3s ease;
+      position: relative;
     }
 
     .card:hover {
@@ -63,13 +64,19 @@
     }
 
     .card-content h3 {
-      margin: 10px 0;
+      margin: 10px 0 5px;
     }
 
     .preco {
       color: #ff6b00;
       font-weight: bold;
       font-size: 18px;
+    }
+
+    .card-content label {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
     }
 
     .pix, .whatsapp {
@@ -148,6 +155,7 @@
       <div class="card-content">
         <h3>Lasanha</h3>
         <p class="preco">R$ 12,00</p>
+        <label><input type="checkbox" value="Lasanha"> Selecionar</label>
       </div>
     </div>
 
@@ -157,6 +165,7 @@
       <div class="card-content">
         <h3>Tortelete Queijo</h3>
         <p class="preco">R$ 5,00</p>
+        <label><input type="checkbox" value="Tortelete Queijo"> Selecionar</label>
       </div>
     </div>
 
@@ -166,10 +175,11 @@
       <div class="card-content">
         <h3>Bolo de Cenoura</h3>
         <p class="preco">R$ 6,00</p>
+        <label><input type="checkbox" value="Bolo de Cenoura"> Selecionar</label>
       </div>
     </div>
 
-    <!-- Adicione mais produtos abaixo copiando o bloco acima -->
+    <!-- Adicione mais produtos copiando o bloco acima -->
   </section>
 
   <div class="pix">
@@ -182,7 +192,7 @@
 
   <div class="whatsapp">
     <h2>Faça seu pedido agora!</h2>
-    <a href="https://wa.me/5599988526703?text=Olá%2C%20quero%20fazer%20um%20pedido%20do%20cardápio!" target="_blank">
+    <a id="linkWhatsapp" href="#" target="_blank" onclick="enviarPedido()">
       📲 Pedir via WhatsApp
     </a>
   </div>
@@ -201,6 +211,23 @@
       msg.style.display = "block";
       setTimeout(() => msg.style.display = "none", 2000);
     });
+  }
+
+  function enviarPedido() {
+    const selecionados = document.querySelectorAll('input[type="checkbox"]:checked');
+    if (selecionados.length === 0) {
+      alert("Por favor, selecione ao menos um produto antes de enviar o pedido.");
+      return;
+    }
+
+    let mensagem = "Olá, quero fazer um pedido com os seguintes itens:%0A";
+    selecionados.forEach(item => {
+      mensagem += "- " + item.value + "%0A";
+    });
+
+    const numero = "5599988526703";
+    const url = `https://wa.me/${numero}?text=${mensagem}`;
+    window.open(url, "_blank");
   }
 </script>
 
