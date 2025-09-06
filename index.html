@@ -156,11 +156,13 @@
     <!-- Adicione mais produtos abaixo copiando o bloco acima -->
   </section>
 
-  <div class="pix">
-    <h2>Pagamento via Pix</h2>
-    <p>Use a chave abaixo para efetuar o pagamento:</p>
-    <span>027.705.213-06</span>
-  </div>
+<div class="pix">
+  <h2>Pagamento via Pix</h2>
+  <p>Use a chave abaixo para efetuar o pagamento:</p>
+  <span id="chavePix">027.705.213-06</span><br><br>
+  <button onclick="copiarChavePix()">📋 Copiar Chave Pix</button>
+  <p id="mensagemCopiado" style="color: green; display: none; margin-top: 10px;">Chave copiada! Envie Comprovante.</p>
+</div>
 
   <div class="whatsapp">
     <h2>Faça seu pedido agora!</h2>
