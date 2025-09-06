@@ -79,6 +79,24 @@
       font-size: 14px;
     }
 
+    .resumo {
+      background: #fff0e6;
+      padding: 20px;
+      margin: 30px auto;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 500px;
+    }
+
+    .resumo h3 {
+      margin-top: 0;
+    }
+
+    .resumo p {
+      font-size: 18px;
+      margin: 8px 0;
+    }
+
     .pix, .whatsapp {
       margin: 40px auto;
       text-align: center;
@@ -155,7 +173,7 @@
       <div class="card-content">
         <h3>Lasanha</h3>
         <p class="preco">R$ 12,00</p>
-        <label><input type="checkbox" value="Lasanha"> Selecionar</label>
+        <label><input type="checkbox" value="Lasanha" data-preco="12.00" onchange="atualizarResumo()"> Selecionar</label>
       </div>
     </div>
 
@@ -165,7 +183,7 @@
       <div class="card-content">
         <h3>Tortelete Queijo</h3>
         <p class="preco">R$ 5,00</p>
-        <label><input type="checkbox" value="Tortelete Queijo"> Selecionar</label>
+        <label><input type="checkbox" value="Tortelete Queijo" data-preco="5.00" onchange="atualizarResumo()"> Selecionar</label>
       </div>
     </div>
 
@@ -175,12 +193,17 @@
       <div class="card-content">
         <h3>Bolo de Cenoura</h3>
         <p class="preco">R$ 6,00</p>
-        <label><input type="checkbox" value="Bolo de Cenoura"> Selecionar</label>
+        <label><input type="checkbox" value="Bolo de Cenoura" data-preco="6.00" onchange="atualizarResumo()"> Selecionar</label>
       </div>
     </div>
-
-    <!-- Adicione mais produtos copiando o bloco acima -->
   </section>
+
+  <div class="resumo">
+    <h3>Resumo do Pedido</h3>
+    <p>Subtotal: R$ <span id="subtotal">0.00</span></p>
+    <p>Taxa de Entrega: R$ 6.00</p>
+    <p><strong>Total: R$ <span id="total">6.00</span></strong></p>
+  </div>
 
   <div class="pix">
     <h2>Pagamento via Pix</h2>
@@ -213,6 +236,21 @@
     });
   }
 
+  function atualizarResumo() {
+    const taxaEntrega = 6.00;
+    let subtotal = 0;
+    const selecionados = document.querySelectorAll('input[type="checkbox"]:checked');
+    
+    selecionados.forEach(item => {
+      subtotal += parseFloat(item.getAttribute("data-preco"));
+    });
+
+    const total = subtotal + taxaEntrega;
+
+    document.getElementById("subtotal").textContent = subtotal.toFixed(2);
+    document.getElementById("total").textContent = total.toFixed(2);
+  }
+
   function enviarPedido() {
     const selecionados = document.querySelectorAll('input[type="checkbox"]:checked');
     if (selecionados.length === 0) {
@@ -221,9 +259,19 @@
     }
 
     let mensagem = "Olá, quero fazer um pedido com os seguintes itens:%0A";
+    let subtotal = 0;
+
     selecionados.forEach(item => {
       mensagem += "- " + item.value + "%0A";
+      subtotal += parseFloat(item.getAttribute("data-preco"));
     });
+
+    const taxaEntrega = 6.00;
+    const total = subtotal + taxaEntrega;
+
+    mensagem += `%0ASubtotal: R$ ${subtotal.toFixed(2)}`;
+    mensagem += `%0ATaxa de Entrega: R$ ${taxaEntrega.toFixed(2)}`;
+    mensagem += `%0ATotal: R$ ${total.toFixed(2)}`;
 
     const numero = "5599988526703";
     const url = `https://wa.me/${numero}?text=${mensagem}`;
