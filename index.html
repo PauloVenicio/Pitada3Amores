@@ -98,6 +98,22 @@
       margin: 8px 0;
     }
 
+    .endereco {
+      background: #fff0e6;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: 20px auto;
+    }
+
+    .endereco input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
     .pix, .whatsapp {
       margin: 40px auto;
       text-align: center;
@@ -157,7 +173,6 @@
       }
     }
 
-    /* Botões flutuantes */
     #btnTopo {
       position: fixed;
       bottom: 20px;
@@ -194,13 +209,11 @@
       color: #eee;
     }
 
-    body.dark-mode .card {
+    body.dark-mode .card,
+    body.dark-mode .resumo,
+    body.dark-mode .endereco {
       background: #1e1e1e;
       border-color: #444;
-    }
-
-    body.dark-mode .resumo {
-      background: #1e1e1e;
     }
 
     body.dark-mode .pix span {
@@ -223,6 +236,7 @@
 <div class="container">
 
   <section class="produto">
+    <!-- PRODUTO 1 -->
     <div class="card">
       <img src="img/lasanha.jpg" alt="Lasanha">
       <div class="card-content">
@@ -231,7 +245,7 @@
         <label><input type="checkbox" value="Lasanha" data-preco="12.00" onchange="atualizarResumo()"> Selecionar</label>
       </div>
     </div>
-
+    <!-- PRODUTO 2 -->
     <div class="card">
       <img src="img/tortelete de queijo.jpg" alt="Tortelete">
       <div class="card-content">
@@ -240,7 +254,7 @@
         <label><input type="checkbox" value="Tortelete Queijo" data-preco="5.00" onchange="atualizarResumo()"> Selecionar</label>
       </div>
     </div>
-
+    <!-- PRODUTO 3 -->
     <div class="card">
       <img src="img/bolo de cenoura.jpg" alt="Bolo de Cenoura">
       <div class="card-content">
@@ -249,7 +263,7 @@
         <label><input type="checkbox" value="Bolo de Cenoura" data-preco="6.00" onchange="atualizarResumo()"> Selecionar</label>
       </div>
     </div>
-
+    <!-- PRODUTO 4 -->
     <div class="card">
       <img src="img/creme de galinha.jpg" alt="Creme de Galinha">
       <div class="card-content">
@@ -265,6 +279,16 @@
     <p>Subtotal: R$ <span id="subtotal">0.00</span></p>
     <p>Taxa de Entrega: R$ 6.00</p>
     <p><strong>Total: R$ <span id="total">6.00</span></strong></p>
+  </div>
+
+  <!-- ENDEREÇO -->
+  <div class="endereco">
+    <h3>Endereço para Entrega</h3>
+    <label for="rua">Rua e Número:</label>
+    <input type="text" id="rua" placeholder="Ex: Rua das Flores, 123">
+
+    <label for="referencia">Ponto de Referência:</label>
+    <input type="text" id="referencia" placeholder="Ex: Próximo ao Supermercado X">
   </div>
 
   <div class="pix">
@@ -286,7 +310,7 @@
   <p>&copy; 2025 Pitada de 3 Amores - Todos os direitos reservados</p>
 </footer>
 
-<!-- Botões Flutuantes -->
+<!-- BOTÕES FLUTUANTES -->
 <button id="btnTopo" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">↑</button>
 <button id="btnModoNoturno" onclick="alternarModoNoturno()">🌙</button>
 
@@ -332,7 +356,20 @@
 
     mensagem += `%0ASubtotal: R$ ${subtotal.toFixed(2)}`;
     mensagem += `%0ATaxa de Entrega: R$ ${taxaEntrega.toFixed(2)}`;
-    mensagem += `%0ATotal: R$ ${total.toFixed(2)}`;
+    mensagem += `%0ATotal: R$ ${total.toFixed(2)}%0A`;
+
+    const rua = document.getElementById("rua").value.trim();
+    const referencia = document.getElementById("referencia").value.trim();
+
+    if (!rua) {
+      alert("Por favor, preencha o campo de rua e número.");
+      return;
+    }
+
+    mensagem += `%0A🚚 Endereço: ${rua}`;
+    if (referencia) {
+      mensagem += `%0A📍 Referência: ${referencia}`;
+    }
 
     const numero = "5599988526703";
     const url = `https://wa.me/${numero}?text=${mensagem}`;
