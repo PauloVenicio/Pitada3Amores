@@ -231,21 +231,23 @@
         </div>
       </div>
     </div>   
-
-    <!-- Adicione mais produtos aqui -->
   </section>
 
   <div class="resumo">
     <h3>Resumo do Pedido</h3>
     <p>Subtotal: R$ <span id="subtotal">0.00</span></p>
-    <p>Taxa de Entrega: R$ 6.00</p>
+    <p>Taxa de Entrega: R$ <span id="taxaEntrega">6.00</span></p>
     <p><strong>Total: R$ <span id="total">6.00</span></strong></p>
   </div>
 
   <div class="endereco">
     <h3>Endereço para Entrega</h3>
+    <input type="text" id="nome" placeholder="Seu nome ou apelido" oninput="salvarEndereco()">
     <input type="text" id="rua" placeholder="Rua e Número" oninput="salvarEndereco()">
     <input type="text" id="referencia" placeholder="Ponto de Referência" oninput="salvarEndereco()">
+    <label style="display:block; margin-top:10px; text-align:left;">
+      <input type="checkbox" id="retirada" onchange="atualizarResumo(); salvarEndereco();"> Retirada no local (sem taxa de entrega)
+    </label>
   </div>
 
   <div class="pix">
@@ -282,8 +284,13 @@
         subtotal += preco * quantidade;
       }
     });
+
+    let retirada = document.getElementById("retirada").checked;
+    let taxaEntrega = retirada ? 0 : 6;
+
     document.getElementById("subtotal").textContent = subtotal.toFixed(2);
-    document.getElementById("total").textContent = (subtotal + 6).toFixed(2);
+    document.getElementById("taxaEntrega").textContent = taxaEntrega.toFixed(2);
+    document.getElementById("total").textContent = (subtotal + taxaEntrega).toFixed(2);
   }
 
   function copiarChavePix() {
@@ -297,6 +304,7 @@
   function enviarPedido() {
     let mensagem = "Olá! Quero fazer um pedido:%0A";
     let subtotal = 0, algum = false;
+
     document.querySelectorAll('.produto-check').forEach((checkbox, i) => {
       if (checkbox.checked) {
         let nome = checkbox.dataset.nome;
@@ -307,15 +315,30 @@
         algum = true;
       }
     });
+
     if (!algum) return alert("Selecione ao menos um produto.");
-    let rua = document.getElementById("rua").value.trim();
-    if (!rua) return alert("Preencha o endereço.");
+
+    let retirada = document.getElementById("retirada").checked;
+    let taxaEntrega = retirada ? 0 : 6;
+
+    // nome/apelido
+    let nomeCliente = document.getElementById("nome").value.trim();
+    if (nomeCliente) mensagem += `%0A🙋 Nome/Apelido: ${nomeCliente}`;
+
     mensagem += `%0ASubtotal: R$ ${subtotal.toFixed(2)}`;
-    mensagem += `%0ATaxa de Entrega: R$ 6.00`;
-    mensagem += `%0ATotal: R$ ${(subtotal + 6).toFixed(2)}`;
-    mensagem += `%0A🚚 Endereço: ${rua}`;
-    let ref = document.getElementById("referencia").value.trim();
-    if (ref) mensagem += `%0A📍 Referência: ${ref}`;
+    mensagem += `%0ATaxa de Entrega: R$ ${taxaEntrega.toFixed(2)}`;
+    mensagem += `%0ATotal: R$ ${(subtotal + taxaEntrega).toFixed(2)}`;
+
+    if (retirada) {
+      mensagem += `%0A✅ Pedido para retirada no local.`;
+    } else {
+      let rua = document.getElementById("rua").value.trim();
+      if (!rua) return alert("Preencha o endereço.");
+      mensagem += `%0A🚚 Endereço: ${rua}`;
+      let ref = document.getElementById("referencia").value.trim();
+      if (ref) mensagem += `%0A📍 Referência: ${ref}`;
+    }
+
     window.open(`https://wa.me/5599988526703?text=${mensagem}`, "_blank");
   }
 
@@ -326,13 +349,18 @@
   }
 
   function salvarEndereco() {
+    localStorage.setItem("nome", document.getElementById("nome").value);
     localStorage.setItem("rua", document.getElementById("rua").value);
     localStorage.setItem("referencia", document.getElementById("referencia").value);
+    localStorage.setItem("retirada", document.getElementById("retirada").checked);
   }
 
   function carregarEndereco() {
+    document.getElementById("nome").value = localStorage.getItem("nome") || "";
     document.getElementById("rua").value = localStorage.getItem("rua") || "";
     document.getElementById("referencia").value = localStorage.getItem("referencia") || "";
+    document.getElementById("retirada").checked = localStorage.getItem("retirada") === "true";
+    atualizarResumo();
   }
 
   function atualizarDataHora() {
