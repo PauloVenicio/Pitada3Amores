@@ -183,7 +183,7 @@
 
 <div class="container">
   <section class="produto" id="listaProdutos">
-    <!-- PRODUTO EXEMPLO -->
+    <!-- PRODUTOS EXEMPLO -->
     <div class="card">
       <img src="img/lasanha.jpg" alt="Lasanha">
       <div class="card-content">
@@ -220,7 +220,7 @@
       </div>
     </div>
 
-     <div class="card">
+    <div class="card">
       <img src="img/tortelete de queijo.jpg" alt="Tortelete de Queijo">
       <div class="card-content">
         <h3>Tortelete de Queijo</h3>
@@ -246,7 +246,7 @@
     <input type="text" id="rua" placeholder="Rua e Número" oninput="salvarEndereco()">
     <input type="text" id="referencia" placeholder="Ponto de Referência" oninput="salvarEndereco()">
     <label style="display:block; margin-top:10px; text-align:left;">
-      <input type="checkbox" id="retirada" onchange="atualizarResumo(); salvarEndereco();"> Retirada no local (sem taxa de entrega)
+      <input type="checkbox" id="retirada" onchange="atualizarResumo();"> Retirada no local (sem taxa de entrega)
     </label>
   </div>
 
@@ -352,14 +352,15 @@
     localStorage.setItem("nome", document.getElementById("nome").value);
     localStorage.setItem("rua", document.getElementById("rua").value);
     localStorage.setItem("referencia", document.getElementById("referencia").value);
-    localStorage.setItem("retirada", document.getElementById("retirada").checked);
+    // ❌ não salva mais o estado do checkbox retirada
   }
 
   function carregarEndereco() {
     document.getElementById("nome").value = localStorage.getItem("nome") || "";
     document.getElementById("rua").value = localStorage.getItem("rua") || "";
     document.getElementById("referencia").value = localStorage.getItem("referencia") || "";
-    document.getElementById("retirada").checked = localStorage.getItem("retirada") === "true";
+    // ✅ sempre inicia desmarcado
+    document.getElementById("retirada").checked = false;
     atualizarResumo();
   }
 
