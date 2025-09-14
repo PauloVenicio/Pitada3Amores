@@ -236,7 +236,6 @@
 <div class="container">
 
   <section class="produto">
-    <!-- PRODUTO 1 -->
     <div class="card">
       <img src="img/lasanha.jpg" alt="Lasanha">
       <div class="card-content">
@@ -245,7 +244,6 @@
         <label><input type="checkbox" value="Lasanha" data-preco="12.00" onchange="atualizarResumo()"> Selecionar</label>
       </div>
     </div>
-    <!-- PRODUTO 2 -->
     <div class="card">
       <img src="img/tortelete de queijo.jpg" alt="Tortelete">
       <div class="card-content">
@@ -254,7 +252,6 @@
         <label><input type="checkbox" value="Tortelete Queijo" data-preco="5.00" onchange="atualizarResumo()"> Selecionar</label>
       </div>
     </div>
-    <!-- PRODUTO 3 -->
     <div class="card">
       <img src="img/bolo de cenoura.jpg" alt="Bolo de Cenoura">
       <div class="card-content">
@@ -263,7 +260,6 @@
         <label><input type="checkbox" value="Bolo de Cenoura" data-preco="6.00" onchange="atualizarResumo()"> Selecionar</label>
       </div>
     </div>
-    <!-- PRODUTO 4 -->
     <div class="card">
       <img src="img/creme de galinha.jpg" alt="Creme de Galinha">
       <div class="card-content">
@@ -281,7 +277,6 @@
     <p><strong>Total: R$ <span id="total">6.00</span></strong></p>
   </div>
 
-  <!-- ENDEREÇO -->
   <div class="endereco">
     <h3>Endereço para Entrega</h3>
     <label for="rua">Rua e Número:</label>
@@ -307,10 +302,9 @@
 </div>
 
 <footer>
-  <p>&copy; 2025 Pitada de 3 Amores - Todos os direitos reservados</p>
+  <p>&copy; 2025 Paulo Carvalho PC - Todos os direitos reservados</p>
 </footer>
 
-<!-- BOTÕES FLUTUANTES -->
 <button id="btnTopo" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">↑</button>
 <button id="btnModoNoturno" onclick="alternarModoNoturno()">🌙</button>
 
@@ -378,16 +372,41 @@
 
   window.onscroll = function () {
     const btn = document.getElementById("btnTopo");
-    if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-      btn.style.display = "block";
-    } else {
-      btn.style.display = "none";
-    }
+    btn.style.display = (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) ? "block" : "none";
   };
 
   function alternarModoNoturno() {
     document.body.classList.toggle("dark-mode");
   }
+
+  // Endereço salvo localmente
+  const ruaInput = document.getElementById("rua");
+  const referenciaInput = document.getElementById("referencia");
+
+  ruaInput.addEventListener("input", () => {
+    localStorage.setItem("rua", ruaInput.value);
+  });
+
+  referenciaInput.addEventListener("input", () => {
+    localStorage.setItem("referencia", referenciaInput.value);
+  });
+
+  // Embaralhar produtos
+  function embaralharProdutos() {
+    const container = document.querySelector(".produto");
+    const cards = Array.from(container.children);
+    for (let i = cards.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+    cards.forEach(card => container.appendChild(card));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem("rua")) ruaInput.value = localStorage.getItem("rua");
+    if (localStorage.getItem("referencia")) referenciaInput.value = localStorage.getItem("referencia");
+    embaralharProdutos();
+  });
 </script>
 
 </body>
