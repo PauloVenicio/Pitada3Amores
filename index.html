@@ -19,6 +19,11 @@
       padding: 20px;
       text-align: center;
     }
+    #dataHora {
+      font-size: 14px;
+      margin-top: 5px;
+      color: #ffe5d0;
+    }
     .container {
       max-width: 1100px;
       margin: 30px auto;
@@ -167,11 +172,13 @@
     }
   </style>
 </head>
-<body onload="embaralharProdutos(); carregarEndereco();">
+<body onload="embaralharProdutos(); carregarEndereco(); atualizarDataHora();">
 
 <header>
   <h1>🍔 Pitada de 3 Amores</h1>
-  <p>Seu catálogo online de lanches, doces e muito mais.</p>
+  <p>Seu catálogo de lanches, doces e muito mais.</p>
+  <p> Horário de atendimento: 10:00 às 22:00</p>
+  <div id="dataHora"></div>
 </header>
 
 <div class="container">
@@ -246,7 +253,9 @@
     <p>Use a chave abaixo para efetuar o pagamento:</p>
     <span id="chavePix">027.705.213-06</span><br><br>
     <button onclick="copiarChavePix()">📋 Copiar Chave Pix</button>
-    <p id="mensagemCopiado" style="color: green; display: none; margin-top: 10px;">Chave copiada! Envie Comprovante, Obrigado volte sempre!</p>
+    <p id="mensagemCopiado" style="color: green; display: none; margin-top: 10px;">
+      Chave copiada! Envie Comprovante, Obrigado volte sempre!
+    </p>
   </div>
 
   <div class="whatsapp">
@@ -255,7 +264,9 @@
   </div>
 </div>
 
-<footer><p>&copy; 2025 Paulo Carvalho PC - Todos os direitos reservados.</p></footer>
+<footer>
+  <p>&copy; 2025 Paulo Carvalho PC - Todos os direitos reservados.</p>
+</footer>
 
 <!-- BOTÕES -->
 <button id="btnTopo" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">↑</button>
@@ -324,10 +335,25 @@
     document.getElementById("referencia").value = localStorage.getItem("referencia") || "";
   }
 
-  window.onscroll = function () {
-    document.getElementById("btnTopo").style.display =
-      (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) ? "block" : "none";
-  };
+  function atualizarDataHora() {
+    const agora = new Date();
+
+    const diasSemana = ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
+    const diaSemana = diasSemana[agora.getDay()];
+
+    const dia = String(agora.getDate()).padStart(2, '0');
+    const mes = String(agora.getMonth() + 1).padStart(2, '0');
+    const ano = agora.getFullYear();
+
+    const hora = String(agora.getHours()).padStart(2, '0');
+    const minuto = String(agora.getMinutes()).padStart(2, '0');
+
+    const dataFormatada = `${diaSemana}, ${dia}/${mes}/${ano} - ${hora}:${minuto}`;
+    document.getElementById("dataHora").textContent = dataFormatada;
+  }
+
+  setInterval(atualizarDataHora, 60000);
 </script>
+
 </body>
 </html>
