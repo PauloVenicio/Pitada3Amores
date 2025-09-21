@@ -53,6 +53,33 @@
       cursor: pointer;
       font-size: 18px;
     }
+
+    /* 🔥 CATEGORIAS */
+    .categorias {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .categorias button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      background: #ffe5d0;
+      color: #333;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .categorias button:hover {
+      transform: scale(1.05);
+      background: #ffccaa;
+    }
+
     .produto {
       display: flex;
       flex-wrap: wrap;
@@ -157,6 +184,9 @@
       .card {
         width: 90%;
       }
+      .categorias {
+        flex-wrap: wrap;
+      }
     }
     #btnTopo, #btnModoNoturno {
       position: fixed;
@@ -213,9 +243,17 @@
     <button onclick="filtrarProdutos()">🔍</button>
   </div>
 
+  <!-- 🔥 CATEGORIAS -->
+  <div class="categorias">
+    <button onclick="filtrarCategoria('todos')">📋 Todos</button>
+    <button onclick="filtrarCategoria('doces')">🍰 Doces</button>
+    <button onclick="filtrarCategoria('salgados')">🥟 Salgados</button>
+    <button onclick="filtrarCategoria('bebidas')">🥤 Bebidas</button>
+  </div>
+
   <section class="produto" id="listaProdutos">
     <!-- PRODUTOS EXEMPLO -->
-    <div class="card">
+    <div class="card" data-categoria="salgados">
       <img src="img/lasanha.jpg" alt="Lasanha">
       <div class="card-content">
         <h3>Fatia de Lasanha</h3>
@@ -227,7 +265,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-categoria="doces">
       <img src="img/bolo de cenoura.jpg" alt="Fatia de bolo de Cenoura">
       <div class="card-content">
         <h3>Fatia de bolo de Cenoura</h3>
@@ -239,8 +277,8 @@
       </div>
     </div>
 
-    <div class="card">
-      <img src= "img/bolo de chocolate.webp" alt="Fatia de bolo de Chocolate">
+    <div class="card" data-categoria="doces">
+      <img src="img/bolo de chocolate.webp" alt="Fatia de bolo de Chocolate">
       <div class="card-content">
         <h3>Fatia de bolo de Chocolate</h3>
         <p class="preco">R$ 6,00</p>
@@ -251,7 +289,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-categoria="doces">
       <img src= "img/Fatia de Pudim.png" alt="Fatia de Pudim">
       <div class="card-content">
         <h3>Fatia de Pudim</h3>
@@ -263,7 +301,7 @@
       </div>
     </div>    
 
-    <div class="card">
+    <div class="card" data-categoria="salgados">
       <img src= "img/torta de frango.jpg" alt="Fatia de Torta de Frango">
       <div class="card-content">
         <h3>Fatia de Torta de Frango</h3>
@@ -275,7 +313,7 @@
       </div>
     </div>    
 
-    <div class="card">
+    <div class="card" data-categoria="salgados">
       <img src="img/creme de galinha.jpg" alt="Porção de Creme de Galinha">
       <div class="card-content">
         <h3>Porção de Creme de Galinha</h3>
@@ -287,7 +325,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-categoria="salgados">
       <img src="img/tortelete de queijo.jpg" alt="Tortelete de Queijo">
       <div class="card-content">
         <h3>Tortelete de Queijo</h3>
@@ -298,6 +336,19 @@
         </div>
       </div>
     </div>   
+
+    <!-- Exemplo bebida -->
+    <div class="card" data-categoria="bebidas">
+      <img src="img/coca cola.jpg" alt="Coca Cola">
+      <div class="card-content">
+        <h3>Coca Cola</h3>
+        <p class="preco">R$ 7,00</p>
+        <div class="quantidade-container">
+          <input type="checkbox" class="produto-check" data-nome="Coca Cola" data-preco="7.00" onchange="atualizarResumo()">
+          <input type="number" class="quantidade" value="1" min="1" onchange="atualizarResumo()">
+        </div>
+      </div>
+    </div>
   </section>
 
   <div class="resumo">
@@ -383,82 +434,74 @@
       }
     });
 
-    if (!algum) return alert("Selecione ao menos um produto.");
+    if (!algum) return alert("Selecione pelo menos 1 produto!");
 
     let retirada = document.getElementById("retirada").checked;
     let taxaEntrega = retirada ? 0 : 6;
-
-    // nome/apelido
-    let nomeCliente = document.getElementById("nome").value.trim();
-    if (nomeCliente) mensagem += `%0A🙋 Nome/Apelido: ${nomeCliente}`;
+    let total = subtotal + taxaEntrega;
 
     mensagem += `%0ASubtotal: R$ ${subtotal.toFixed(2)}`;
-    mensagem += `%0ATaxa de Entrega: R$ ${taxaEntrega.toFixed(2)}`;
-    mensagem += `%0ATotal: R$ ${(subtotal + taxaEntrega).toFixed(2)}`;
+    mensagem += `%0ATaxa de entrega: R$ ${taxaEntrega.toFixed(2)}`;
+    mensagem += `%0ATotal: R$ ${total.toFixed(2)}%0A`;
 
     if (retirada) {
-      mensagem += `%0A✅ Pedido para retirada no local.`;
+      mensagem += "%0A**Cliente irá retirar no local**";
     } else {
-      let rua = document.getElementById("rua").value.trim();
-      if (!rua) return alert("Preencha o endereço.");
-      mensagem += `%0A🚚 Endereço: ${rua}`;
-      let ref = document.getElementById("referencia").value.trim();
-      if (ref) mensagem += `%0A📍 Referência: ${ref}`;
+      mensagem += "%0AEndereço:%0A";
+      mensagem += document.getElementById("nome").value + "%0A";
+      mensagem += document.getElementById("rua").value + "%0A";
+      mensagem += "Ref: " + document.getElementById("referencia").value + "%0A";
     }
 
-    window.open(`https://wa.me/5599988526703?text=${mensagem}`, "_blank");
-  }
-
-  function embaralharProdutos() {
-    const container = document.getElementById("listaProdutos");
-    const cards = Array.from(container.children);
-    cards.sort(() => Math.random() - 0.5).forEach(c => container.appendChild(c));
+    window.open("https://wa.me/5585989677109?text=" + mensagem, "_blank");
   }
 
   function salvarEndereco() {
     localStorage.setItem("nome", document.getElementById("nome").value);
     localStorage.setItem("rua", document.getElementById("rua").value);
     localStorage.setItem("referencia", document.getElementById("referencia").value);
-    // ❌ não salva mais o estado do checkbox retirada
   }
 
   function carregarEndereco() {
     document.getElementById("nome").value = localStorage.getItem("nome") || "";
     document.getElementById("rua").value = localStorage.getItem("rua") || "";
     document.getElementById("referencia").value = localStorage.getItem("referencia") || "";
-    // ✅ sempre inicia desmarcado
-    document.getElementById("retirada").checked = false;
-    atualizarResumo();
   }
 
-  function atualizarDataHora() {
-    const agora = new Date();
-
-    const diasSemana = ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
-    const diaSemana = diasSemana[agora.getDay()];
-
-    const dia = String(agora.getDate()).padStart(2, '0');
-    const mes = String(agora.getMonth() + 1).padStart(2, '0');
-    const ano = agora.getFullYear();
-
-    const hora = String(agora.getHours()).padStart(2, '0');
-    const minuto = String(agora.getMinutes()).padStart(2, '0');
-
-    const dataFormatada = `${diaSemana}, ${dia}/${mes}/${ano} - ${hora}:${minuto}`;
-    document.getElementById("dataHora").textContent = dataFormatada;
-  }
-
-  setInterval(atualizarDataHora, 60000);
-
-  // 🔍 FILTRAR PRODUTOS
   function filtrarProdutos() {
     let termo = document.getElementById("campoBusca").value.toLowerCase();
     document.querySelectorAll(".card").forEach(card => {
-      let nome = card.querySelector("h3").textContent.toLowerCase();
+      let nome = card.querySelector("h3").innerText.toLowerCase();
       card.style.display = nome.includes(termo) ? "block" : "none";
     });
   }
-  document.getElementById("campoBusca").addEventListener("input", filtrarProdutos);
+
+  function filtrarCategoria(cat) {
+    document.querySelectorAll(".card").forEach(card => {
+      let categoria = card.getAttribute("data-categoria");
+      card.style.display = (cat === "todos" || categoria === cat) ? "block" : "none";
+    });
+  }
+
+  function embaralharProdutos() {
+    let container = document.getElementById("listaProdutos");
+    let cards = Array.from(container.children);
+    for (let i = cards.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      container.appendChild(cards[j]);
+    }
+  }
+
+  function atualizarDataHora() {
+    let agora = new Date();
+    document.getElementById("dataHora").textContent = 
+      agora.toLocaleDateString("pt-BR") + " " + agora.toLocaleTimeString("pt-BR");
+    setTimeout(atualizarDataHora, 1000);
+  }
+
+  window.onscroll = function() {
+    document.getElementById("btnTopo").style.display = window.scrollY > 200 ? "block" : "none";
+  }
 </script>
 
 </body>
