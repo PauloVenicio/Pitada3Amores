@@ -29,6 +29,30 @@
       margin: 30px auto;
       padding: 0 20px;
     }
+    .busca {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .busca input {
+      width: 60%;
+      max-width: 400px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    .busca button {
+      padding: 10px 15px;
+      background: #ff6b00;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 18px;
+    }
     .produto {
       display: flex;
       flex-wrap: wrap;
@@ -182,6 +206,13 @@
 </header>
 
 <div class="container">
+
+  <!-- CAMPO DE BUSCA -->
+  <div class="busca">
+    <input type="text" id="campoBusca" placeholder="Digite o nome do produto...">
+    <button onclick="filtrarProdutos()">🔍</button>
+  </div>
+
   <section class="produto" id="listaProdutos">
     <!-- PRODUTOS EXEMPLO -->
     <div class="card">
@@ -382,6 +413,16 @@
   }
 
   setInterval(atualizarDataHora, 60000);
+
+  // 🔍 FILTRAR PRODUTOS
+  function filtrarProdutos() {
+    let termo = document.getElementById("campoBusca").value.toLowerCase();
+    document.querySelectorAll(".card").forEach(card => {
+      let nome = card.querySelector("h3").textContent.toLowerCase();
+      card.style.display = nome.includes(termo) ? "block" : "none";
+    });
+  }
+  document.getElementById("campoBusca").addEventListener("input", filtrarProdutos);
 </script>
 
 </body>
